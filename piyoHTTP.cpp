@@ -34,6 +34,8 @@ OnRequest(Request &req, Response &res) {
             req.GetPath().c_str(),
             req.GetProtocol().c_str());
 
+    std::printf("User-Agent: %s\n", req.GetHeader("User-Agent").c_str());
+
     std::ifstream resource("./static/" + req.GetPath());
 
     if (resource.fail()) {
@@ -43,8 +45,10 @@ OnRequest(Request &req, Response &res) {
     }
 
     std::string content;
+    std::string line;
     while (resource.good()) {
-        resource >> content;
+        resource >> line;
+        content += line + '\n';
     }
     resource.close();
 
@@ -85,6 +89,12 @@ piyoHTTP::Listen(int port) {
         }
 
         Request req(buffer);
+        if (!(  req.GetProtocol() == "HTTP/1.1" ||
+                req.GetProtocol() == "HTTP/1.0" ||
+                req.GetProtocol() == "HTTP/2.0")) {
+            continue;
+        }
+
         Response res(newsockfd);
 
         OnRequest(req, res);

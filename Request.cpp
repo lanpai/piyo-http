@@ -18,11 +18,15 @@ Request::Request(const char* request) {
             std::string key;
             blockstream >> key;
 
-            if (!!key.length() && key.at(key.length() - 1) == ':') {
+            if (key.length() > 0 && key.at(key.length() - 1) == ':') {
                 key.pop_back();
 
                 std::string value;
-                while (blockstream >> value);
+                std::string block;
+                while (blockstream >> block)
+                    value += block + ' ';
+                if (value.length() > 0)
+                    value.pop_back();
 
                 this->headers[key] = value;
             }
