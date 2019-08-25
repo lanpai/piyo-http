@@ -2,6 +2,9 @@
 <head>
     <title>piyoHTTP Test Page</title>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0">
+
     <style>
         body {
             margin: 0;
@@ -11,23 +14,46 @@
         }
 
         .background {
-            padding: 30px;
             width: 100%;
 
             background-color: #cd3f3e;
+        }
+
+        .padded {
+            padding: 30px;
         }
 
         h2, p {
             color: #f4f6f6;
             font-family: Tahoma, Geneva, sans-serif;
         }
+
+        h2 {
+            border-left-style: solid;
+            padding-left: 10px;
+        }
+
+        .footer {
+            text-align: right;
+            font-style: italic;
+        }
+
+        .heart {
+            color: pink;
+        }
     </style>
 </head>
 
 <body>
     <div class="background">
-        <h2>piyoHTTP Test Page</h2>
-        <p>an http server back-end created in c++</p>
+        <div class="padded">
+            <h2>piyoHTTP Test Page</h2>
+            <p>an http server back-end created in c++</p>
+        </div>
+    </div>
+
+    <div class="padded">
+        <p class="footer">made w/ <span class="heart">❤</span> by lanpai.</p>
     </div>
 </body>
 </html>
