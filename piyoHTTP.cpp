@@ -34,6 +34,8 @@ OnRequest(Request &req, Response &res) {
             req.GetPath().c_str(),
             req.GetProtocol().c_str());
 
+    res.SetHeader("Content-Type", "text/html");
+
     std::printf("User-Agent: %s\n", req.GetHeader("User-Agent").c_str());
 
     std::ifstream resource("./static/" + req.GetPath());
