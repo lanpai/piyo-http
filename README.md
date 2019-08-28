@@ -18,7 +18,7 @@ Currently only available on Linux as this software follows POSIX standards for s
 
 ## 🚧 Roadmap
 - v. **alpha**
-  - [ ] Multithreaded request handler
+  - [x] Multithreaded request handler
   - [ ] Multiplatform support
     - [x] Linux
     - [ ] Windows

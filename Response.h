@@ -18,10 +18,13 @@ class Response : public Message {
         const std::string GetStatusDesc(int code) const;
 
         void WriteHead(int code = StatusCode::OK);
+        void Write(std::string content);
         void End(std::string content);
 
     private:
         int sockfd;
+
+        bool isClosed;
 };
 
 #endif

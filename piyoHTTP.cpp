@@ -4,13 +4,12 @@
 #include <strings.h>
 #include <unistd.h>
 #include <fstream>
+#include <signal.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "Request.h"
-#include "Response.h"
 #include "MIME.h"
 
 piyoHTTP::piyoHTTP() {
@@ -18,9 +17,22 @@ piyoHTTP::piyoHTTP() {
         std::perror("socket()");
         exit(EXIT_FAILURE);
     }
+
+    this->threadIter = 0;
+
+    for (int i = 0; i < MAX_THREADS; i++)
+        this->openThreads[i] = true;
 }
 
 piyoHTTP::~piyoHTTP() {
+    std::printf("Closing all threads...");
+
+    this->isRunning = false;
+    for (int i = 0; i < MAX_THREADS; i++) {
+        if (this->threads[i].joinable())
+            this->threads[i].join();
+    }
+
     if (close(this->sockfd) < 0) {
         std::perror("close()");
         exit(EXIT_FAILURE);
@@ -28,7 +40,8 @@ piyoHTTP::~piyoHTTP() {
 }
 
 void
-OnRequest(Request &req, Response &res) {
+piyoHTTP::OnRequest(Request req, Response res, int i) {
+    std::printf("thread id: %d\n", i);
     std::printf("host: %s\n%s %s %s\n",
             req.GetHeader("Host").c_str(),
             req.GetMethod().c_str(),
@@ -56,10 +69,21 @@ OnRequest(Request &req, Response &res) {
     resource.close();
 
     res.WriteHead(200);
-    res.End(content);
+    //res.End(content);
+
+    res.Write("test");
+    sleep(1);
+    res.Write("test");
+    sleep(1);
+    res.Write("test");
+    sleep(1);
+    res.End("test");
+    sleep(10);
+
+    this->openThreads[i] = true;
 }
 
-int
+void
 piyoHTTP::Listen(int port) {
     struct sockaddr_in serv_addr;
 
@@ -81,20 +105,23 @@ piyoHTTP::Listen(int port) {
 
     listen(this->sockfd, 5);
 
-    while (true) {
+    signal(SIGPIPE, SIG_IGN);
+
+    this->isRunning = true;
+    while (this->isRunning) {
         struct sockaddr_in cli_addr;
         int newsockfd;
         int clilen = sizeof(cli_addr);
 
         if ((newsockfd = accept(this->sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen)) < 0) {
             std::perror("accept()");
-            exit(EXIT_FAILURE);
+            continue;
         }
 
         char buffer[8192];
         if (read(newsockfd, buffer, 8192) < 0) {
             std::perror("accept()");
-            exit(EXIT_FAILURE);
+            continue;
         }
 
         Request req(buffer);
@@ -106,11 +133,19 @@ piyoHTTP::Listen(int port) {
 
         Response res(newsockfd);
 
-        OnRequest(req, res);
-
-        if (close(newsockfd) < 0) {
-            std::perror("close()");
-            exit(EXIT_FAILURE);
+        int i = this->threadIter;
+        while (true) {
+            if (this->openThreads[i]) {
+                std::printf("checking %d\n", i);
+                if (this->threads[i].joinable())
+                    this->threads[i].join();
+                this->openThreads[i] = false;
+                this->threadIter = i;
+                this->threads[i] = std::thread(&piyoHTTP::OnRequest, this, req, res, i);
+                break;
+            }
+            if (++i >= MAX_THREADS)
+                i = 0;
         }
     }
 }

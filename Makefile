@@ -8,7 +8,7 @@ OBJS = main.o piyoHTTP.o Message.o Request.o Response.o
 BUILD_DIR = build
 OBJ_DIR = obj
 
-LIB = 
+LIB = -lpthread
 
 ifeq ($(OS),Windows_NT)
 	LIB =
