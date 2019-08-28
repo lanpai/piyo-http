@@ -11,6 +11,7 @@
 
 #include "Request.h"
 #include "Response.h"
+#include "MIME.h"
 
 piyoHTTP::piyoHTTP() {
     if ((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -34,7 +35,7 @@ OnRequest(Request &req, Response &res) {
             req.GetPath().c_str(),
             req.GetProtocol().c_str());
 
-    res.SetHeader("Content-Type", "text/html");
+    res.SetHeader("Content-Type", GetMIME("html"));
 
     std::printf("User-Agent: %s\n", req.GetHeader("User-Agent").c_str());
 
@@ -61,6 +62,12 @@ OnRequest(Request &req, Response &res) {
 int
 piyoHTTP::Listen(int port) {
     struct sockaddr_in serv_addr;
+
+    int opt = 1;
+    if (setsockopt(this->sockfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) < 0) {
+        std::perror("setsockopt()");
+        exit(EXIT_FAILURE);
+    }
 
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;

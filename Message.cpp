@@ -7,5 +7,8 @@ Message::SetHeader(const std::string &header, const std::string &value) {
 
 const std::string
 Message::GetHeader(const std::string &header) {
-    return this->headers[header];
+    std::map<std::string, std::string>::iterator value = this->headers.find(header);
+    if (value == this->headers.end())
+        return NULL;
+    return value->second;
 }
