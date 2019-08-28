@@ -69,6 +69,7 @@ piyoHTTP::OnRequest(Request req, Response res, int i) {
     resource.close();
 
     res.WriteHead(200);
+    sleep(5);
     res.End(content);
 
     this->openThreads[i] = true;
@@ -131,11 +132,11 @@ piyoHTTP::Listen(int port) {
                 if (this->threads[i].joinable())
                     this->threads[i].join();
                 this->openThreads[i] = false;
-                this->threadIter = i;
+                this->threadIter = i + 1;
                 this->threads[i] = std::thread(&piyoHTTP::OnRequest, this, req, res, i);
                 break;
             }
-            if (++i >= MAX_THREADS)
+            if (i++ >= MAX_THREADS)
                 i = 0;
         }
     }
