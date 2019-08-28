@@ -69,7 +69,6 @@ piyoHTTP::OnRequest(Request req, Response res, int i) {
     resource.close();
 
     res.WriteHead(200);
-    sleep(5);
     res.End(content);
 
     this->openThreads[i] = true;
