@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+#include "Message.h"
+
 std::map<std::string, std::string> MIME_TYPES = {
     {   "atom",     "application/atom+xml"                  },
     {   "ear",      "application/java-archive"              },
@@ -129,8 +131,15 @@ std::map<std::string, std::string> MIME_TYPES = {
 const std::string GetMIME(const std::string &ext) {
     std::map<std::string, std::string>::iterator mime = MIME_TYPES.find(ext);
     if (mime == MIME_TYPES.end())
-        return "application/octet-stream";
+        return NULL;
     return mime->second;
+}
+
+void UpdateMIME(const std::string &ext, Message &message) {
+    std::map<std::string, std::string>::iterator mime = MIME_TYPES.find(ext);
+    if (mime == MIME_TYPES.end())
+        return;
+    message.SetHeader("Content-Type", mime->second);
 }
 
 #endif

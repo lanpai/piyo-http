@@ -35,7 +35,7 @@ OnRequest(Request &req, Response &res) {
             req.GetPath().c_str(),
             req.GetProtocol().c_str());
 
-    res.SetHeader("Content-Type", GetMIME("html"));
+    UpdateMIME("html", res);
 
     std::printf("User-Agent: %s\n", req.GetHeader("User-Agent").c_str());
 
