@@ -8,7 +8,9 @@ Request::Request(const char* request) {
 
     std::string line;
     int lineNum = 0;
+    std::printf("------------------------------\n");
     while (std::getline(linestream, line)) {
+        std::printf("%s\n", line.c_str());
         std::istringstream blockstream(line);
 
         if (lineNum == 0) {
@@ -34,4 +36,5 @@ Request::Request(const char* request) {
 
         lineNum++;
     }
+    std::printf("------------------------------\n");
 }
