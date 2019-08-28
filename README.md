@@ -5,6 +5,8 @@ There are currently very limited features and security checks so PR's would be m
 
 **This is a hobby project which provides no guarantees to security. This software should not be used outside of a testing or development environment.**
 
+Currently only available on Linux as this software follows POSIX standards for sockets using <sys/socket.h>
+
 ---
 
 ## 💽 Installation
@@ -17,6 +19,10 @@ There are currently very limited features and security checks so PR's would be m
 ## 🚧 Roadmap
 - v. **alpha**
   - ☐ Multithreaded request handler
+  - ☐ Multiplatform support
+    - 🗹 Linux
+    - ☐ Windows
+    - ☐ MacOS
 
 ---
 
