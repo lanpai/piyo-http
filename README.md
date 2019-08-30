@@ -19,6 +19,7 @@ Currently only available on Linux as this software follows POSIX standards for s
 ## 🚧 Roadmap
 - v. **alpha**
   - [ ] Implement a scripting language
+  - [ ] Comment the codebase
   - [ ] HTTPS support
   - [x] Multithreaded request handler
   - [ ] Multiplatform support
