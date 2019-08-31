@@ -19,6 +19,7 @@ Currently only available on Linux as this software follows POSIX standards for s
 ## 🚧 Roadmap
 - v. **alpha**
   - [ ] Implement a scripting language (developed here: [https://github.com/lanpai/piyo-lang](https://github.com/lanpai/piyo-lang))
+  - [ ] const-qualify methods
   - [ ] Comment the codebase
   - [ ] HTTPS support
   - [x] Multithreaded request handler
